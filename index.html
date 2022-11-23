@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+     <img src="./Asset 1@3x 1.jpg">
+            <ul>
+                <li><a href="#1">Bank</a></li>
+                <li><a href="#2">BUSINESS</a></li>
+                <li><a href="#3">INVESTMENTS</a></li>
+                <li><a href="#4">INSURANCE</a></li>
+                <li><a href="#5">MOBILE</a></li>
+                <li><a href="#6">TRAVELS</a></li>
+                <li><a href="#7">ENTERTAINMENT</a></li>
+             </ul>
+             <a href="index.html"class="btn">Sign out</a>
+        </div>
+
+    </header>
+
+   
+        <h1>Currency Converter Online</h1>
+    <div class="MainSection">
+        <div class="Left-Side">
+            <p>From</p>
+            <div class="Selection">
+                <input id="RUB1" type="radio" name="currency01" value="RUB" checked>
+                  <label for="RUB1">RUB</label>
+                  <input id="USD1" type="radio" name="currency01" value="USD">
+                  <label for="USD1">USD</label>
+                  <input id="AZE1" type="radio" name="currency01" value="AZE" >
+                  <label for="AZE1">AZN</label>
+                  <input id="TRY1" type="radio" name="currency01" value="TRY">
+                  <label for="TRY1">TRY</label>
+            </div>
+
+            <div class="Area">
+                <input class="from" value="1"  type="number" placeholder="Enter Value">
+<p class="ff"></p>
+            </div>
+        </div>
+<div class="Right-Side">
+<p>To</p>
+<div class="Selection">
+    <input id="RUB2" type="radio" name="currency02" value="RUB">
+    <label for="RUB2">RUB</label>
+    <input id="USD2" type="radio" name="currency02" value="USD" checked>
+    <label for="USD2">USD</label>
+    <input id="AZE2" type="radio" name="currency02" value="AZE">
+    <label for="AZE2">AZN</label>
+    <input id="TRY2" type="radio" name="currency02" value="TRY">
+    <label for="TRY2">TRY</label>
+</div>
+<div class="Area">
+    <input readonly  value="0.016544"  class="to">
+    <p class="ee"></p>
+</div>
+</div>
+    </div>
+
+
+
+   
+    <script src="code.js"></script>
+
+
+    <script>
+        let exchan1 = document.querySelectorAll('.MainSection .Left-Side .Selection label');
+let exchan2 = document.querySelectorAll('.MainSection .Right-Side .Selection label');
+let inputTo = document.querySelector('.to');
+let inputFrom = document.querySelector('.from');
+let ParagraphFrom = document.querySelector('.ff');
+let ParagraphTo = document.querySelector('.ee');
+var currency1 = document.getElementById('RUB1').value;
+var currency2 = document.getElementById('USD2').value;
+
+eventListeners();
+function eventListeners() {
+  inputFrom.addEventListener("keyup", checkDataByFrom);
+  inputTo.addEventListener("keyup", checkDataByTo);
+}
+
+exchan1.forEach((select) => {
+  select.addEventListener('click', (e) => {
+    currency1 = e.target.innerText
+    console.log(currency1)
+    checkDataByTo()
+  })
+})
+exchan2.forEach((select) => {
+  select.addEventListener('click', (e) => {
+    currency2 = e.target.innerText
+    console.log(currency2)
+    checkDataByFrom()
+  })
+})
+
+async function checkDataByFrom() {
+  const res = await fetch(`https://api.exchangerate.host/latest?base=${currency1}&symbols=${currency2}`)
+  .catch(err => 
+    {alert('Access Denied')
+    
+   
+  });
+  const data = await res.json();
+  inputTo.value = (Object.values(data.rates)[0] * inputFrom.value).toFixed(2);
+  if (currency1 && currency2) {
+    ParagraphFrom.innerHTML = `1 ${data.base} = ${Object.values(data.rates)[0].toFixed(5)} ${Object.keys(data.rates)}`;
+    ParagraphTo.innerHTML = `1 ${Object.keys(data.rates)} = ${(1 / Object.values(data.rates)[0]).toFixed(5)} ${data.base}`;
+  }
+}
+async function checkDataByTo() {
+  const res = await fetch(`https://api.exchangerate.host/latest?base=${currency1}&symbols=${currency2}`).catch(err => alert('Acess Denied'));
+  const data = await res.json();
+  inputTo.value = (Object.values(data.rates)[0] * inputFrom.value).toFixed(2);
+  if (currency1 && currency2) {
+    ParagraphFrom.innerHTML = `1 ${data.base} = ${Object.values(data.rates)[0].toFixed(5)} ${Object.keys(data.rates)}`;
+    ParagraphTo.innerHTML = `1 ${Object.keys(data.rates)} = ${(1 / Object.values(data.rates)[0]).toFixed(5)} ${data.base}`;
+  }
+}
+    </script>
+    <style>
+        a {
+    text-decoration: none;
+    color: bisque;
+}
+
+body {
+    background-color:bisque;
+
+}
+
+input{
+    margin: 10px -1px;
+    color: white;
+  }
+  input[type="radio"]:checked + label{
+    background-color: coral;
+    color: white;
+}
+  input[type="radio"]{
+    appearance: none;
+  }
+.none{
+    display: block !important;
+  }
+.btn {
+    color: black;
+    background-color: #fff;
+    padding: 0.8%;
+    margin-right: 10%;
+    border: 0;
+    font-weight: 700;
+    border-radius: 10px;
+}
+
+.MainSection{
+    margin-right: 25%;
+}
+
+
+
+label {
+    border: 1px solid black;
+background-color: white;
+    width: 40%;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+
+
+ label:hover {
+    
+    background-color: coral;
+    color: #fff;
+}
+
+
+
+
+
+
+.to{
+    margin-top: 1rem;
+    height: 8rem;
+    width: 100%;
+    border: 1px solid black;
+    font-size: 2rem;
+    color: black;
+    padding: 1rem;
+    display: flex;
+}
+
+.from{
+    margin-top: 1rem;
+    height: 8rem;
+    width: 100%;
+    border: 1px solid black;
+    font-size: 2rem;
+    color: black;
+    padding: 1rem;
+    display: flex;
+}
+
+.MainSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+
+    padding: 1rem;
+    width: 60%;
+    margin: 3% 20%;
+    align-content: center;
+
+}
+
+.Selection {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+h1 {
+
+    padding-left: 320px;
+    padding-top: 106px;
+    align-content: center;
+color:coral;
+    font-size: 50px;
+
+
+
+   
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+
+
+img {
+    padding-left: 10%;
+}
+
+.navbar {
+    background-color:coral;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+}
+
+.navbar ul li a {
+    padding: 1rem;
+}
+
+.navbar ul li a:hover {
+    color: black;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background-color: black;
+    color: white;
+}
+    </style>
+</body>
+</html>
